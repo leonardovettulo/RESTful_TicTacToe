@@ -1,12 +1,14 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
-
+from flask_cors import CORS
 import os
 import sys
 
 #Init app
 app = Flask(__name__)
+cors = CORS(app) # This will enable CORS for all routes
+
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 #Database
@@ -61,7 +63,11 @@ games_schema = GameSchema(many=True)
 detail_schema = DetailSchema()
 details_schema = DetailSchema(many=True)
 
-
+"""
+@app.route('/')
+def get():
+    return jsonify({"message":os.path.join(basedir, 'db.sqlite')})
+"""
 
 ###### CREATE/UPDATE/SHOW/DELETE GAMES
 
@@ -91,6 +97,7 @@ def get_games():
 @app.route('/games/<id>', methods=['GET'])
 def get_game_detail(id):
     game_detail = Game.query.get(id)
+    #result = games_schema.dump(all_games)
     return game_schema.jsonify(game_detail)
 
 
@@ -134,6 +141,46 @@ def delete_game(id):
     #return details_schema.jsonify(result)
 
 
+####GET STATUS
+#Get Status
+@app.route('/games/<id>/moves', methods=['GET'])
+def get_game_status(id):
+
+    board = ['0','0','0','0','0','0','0','0','0']
+
+    game_detail = Game.query.get(id)
+
+    all_moves = Detail.query.filter(Detail.id_game == id).all()
+    results = details_schema.dump(all_moves)
+    for result in results:
+        result_list = list(result['moves'])
+        for i in range(len(result_list)):
+            if(result_list[i] == '1'):
+                board[i] = result_list[i]
+            elif(result_list[i] == '2'):
+                board[i] = result_list[i]
+
+    
+
+    board_string = ''.join(board)
+    #print(board_string, file=sys.stderr)
+
+    print(game_detail.status, file=sys.stderr)
+    return jsonify({"id":game_detail.id,"name":game_detail.name, "status":game_detail.status,"winner":game_detail.winner,"lastMove":board_string})
+
+
+
+
+
+
+
+
+
+
+
+####
+
+
 
 ###### CREATE AND DELETE MOVES IN ONE GAME
 
@@ -151,6 +198,10 @@ def add_move(id):
         return jsonify({"Message":"Game does not exist."})
 
 
+    #TODO_Check if move is valid
+    #We need to check here if the string is 9 chars and with 8 zeros and 1 one
+
+
     #Check if the move is valid
     """
 
@@ -161,9 +212,6 @@ def add_move(id):
         return jsonify({"Message":"There are no moves"})
     """
 
-    #Get board (last move is the board status)
-    #last_move = Detail.query.filter(Detail.id_game == id).order_by(Detail.id.desc()).first().moves
-    #print(last_move, file=sys.stderr)
 
 
     board = ['0','0','0','0','0','0','0','0','0']
@@ -195,7 +243,11 @@ def add_move(id):
 
         #print(list(result['moves']), file=sys.stderr)
 
-    #Check if position is not occupied
+
+
+
+    #TODO_Check if position is not occupied
+    #We need a check here to check if the move is in an empty space
 
 
     #Insert move into database
@@ -226,7 +278,7 @@ def add_move(id):
         end_game("human_won",id_game)
         return jsonify({"Message":"You WON"})
 
-    #Make next move
+    #Make next move (There is not much logic here, computer is a bit dumb)
     temp_move = ['0','0','0','0','0','0','0','0','0']
 
     if(board[4]=='0'):
@@ -281,29 +333,11 @@ def add_move(id):
 
     #Return next move
     
-    #print(move, file=sys.stderr)
-    
     print(board)
     print(board_1)
     print(board_2)
 
     return detail_schema.jsonify(new_move)
-
-
-
-
-#Function to update game status when there is a winner
-def end_game(winner,id_game):
-    game = Game.query.get(id_game)
-    game.status = "Finished"
-    game.winner = winner
-    db.session.commit()
-
-    print(winner, file=sys.stderr)
-    return True
-
-
-
 
 
 #Delete moves
@@ -316,8 +350,18 @@ def delete_moves(id):
     num_rows_deleted = db.session.query(Detail).filter(Detail.id_game == id).delete()
     db.session.commit()
 
-    return jsonify(result) #game_schema.jsonify(moves_delete)
+    return jsonify(result)
 
+
+
+def end_game(winner,id_game):
+    game = Game.query.get(id_game)
+    game.status = "Finished"
+    game.winner = winner
+    db.session.commit()
+
+    print(winner, file=sys.stderr)
+    return True
 
 
 #Run Server

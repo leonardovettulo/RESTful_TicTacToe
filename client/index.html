@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>RESTful Tic Tac Toe</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+
+<body>
+    <button id="reset">Reset</button>
+    <button id="showGames">Show Games</button>
+    <br>
+    <br>
+    <h2>Actual Game: <span id="actual"></span></h2>
+    <h3>Status: <span id="status"></span></h3>
+    <table>
+        <tr>
+            <th id="p0">-</th>
+            <th id="p1">-</th>
+            <th id="p2">-</th>
+        </tr>
+        <tr>
+            <th id="p3">-</th>
+            <th id="p4">-</th>
+            <th id="p5">-</th>
+        </tr>
+        <tr>
+            <th id="p6">-</th>
+            <th id="p7">-</th>
+            <th id="p8">-</th>
+        </tr>
+    </table>
+    <br>
+    <div id="result">
+
+    </div>
+    <br>
+    <form id="newGame">
+
+        <input type="text" id="title" placeholder="Game Title">
+
+        <input type="submit" value="New Game">
+
+    </form>
+
+    <div id="games">
+
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>
