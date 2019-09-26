@@ -1,9 +1,15 @@
 th,
 td {
-    padding: 50px 60px;
+    table-layout: fixed;
+    width: 600px;
+    height: 200px;
     border: 1px solid grey;
 }
 
 th {
     text-align: center;
+}
+
+#tic {
+    font-size: 3rem;
 }

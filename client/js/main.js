@@ -1,5 +1,5 @@
-document.getElementById('reset').addEventListener('click', reset);
-document.getElementById('showGames').addEventListener('click', showGames);
+// document.getElementById('reset').addEventListener('click', reset);
+// document.getElementById('showGames').addEventListener('click', showGames);
 document.getElementById('newGame').addEventListener('submit', newGame);
 
 showGames();
@@ -81,7 +81,7 @@ function showGames() {
 function mark(event) {
 
     //Check if the place is empty
-    if (event.target.innerHTML === "-" && gameStatus != "Finished" /*&& gameStatus == "Ongoing"*/ ) {
+    if (event.target.innerHTML === "-" && gameStatus != "Finished" && actualGame != 0 /*&& gameStatus == "Ongoing"*/ ) {
 
         event.target.innerHTML = "X";
         //console.log(event.target.id);
@@ -95,12 +95,7 @@ function mark(event) {
                 move_string += '0';
             }
         }
-        //console.log(move_string);
 
-        //console.log(JSON.stringify({ move: "000000100" }));
-
-        //Send the move as Json and receive next move from server
-        //fetch('http://127.0.0.1:5000/games/1/moves', {
         fetch(`http://127.0.0.1:5000/games/${actualGame}/moves`, {
                 method: 'POST',
                 headers: {
@@ -140,27 +135,23 @@ function mark(event) {
 }
 
 
-//Delete all the moves and start again
-function reset() {
-
-    //Reset moves
-    for (let i = 0; i < 9; i++) {
-        document.getElementById(`p${i}`).innerHTML = "-";
-    }
-
-    //Reset result
-    document.getElementById('result').innerHTML = '';
-
-    //Send delete to delete from database
-    fetch(`http://127.0.0.1:5000/games/${actualGame}/moves`, {
-            method: 'DELETE'
-        }).then((res) => res.json())
-        .then((data) => {
-            console.log("Moves Deleted")
-            console.log(data);
-        }).catch(error => console.log('Error deleting move: ', error));
-
-}
+// //Delete all the moves and start again - This is only for testing
+// function reset() {
+//     //Reset moves
+//     for (let i = 0; i < 9; i++) {
+//         document.getElementById(`p${i}`).innerHTML = "-";
+//     }
+//     //Reset result
+//     document.getElementById('result').innerHTML = '';
+//     //Send delete to delete from database
+//     fetch(`http://127.0.0.1:5000/games/${actualGame}/moves`, {
+//             method: 'DELETE'
+//         }).then((res) => res.json())
+//         .then((data) => {
+//             console.log("Moves Deleted")
+//             console.log(data);
+//         }).catch(error => console.log('Error deleting move: ', error));
+// }
 
 
 //Resume Game
