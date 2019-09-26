@@ -60,18 +60,30 @@ function showGames() {
         .then((res) => res.json())
         .then((data) => {
             console.log(data);
-            let output = '<h2>Games</h2>'
+            let output = `      
+            <table id="tableGames" class="table">          
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Winner</th>
+                    <th>Action</th>
+                </tr>
+                `
             data.forEach((game) => {
+
                 output += `
-                    <ul>
-                        <li>ID: ${game.id}</li>
-                        <li>NAME: ${game.name}</li>
-                        <li>STATUS: ${game.status}</li>
-                        <li>WINNER: ${game.winner}
-                        <li><button onclick="resumeGame(${game.id})" id=${game.id}>Resume</button></li>
-                    </ul>
+
+                <tr>
+                    <th>${game.id}</th>
+                    <th>${game.name}</th>
+                    <th> ${game.status}</th>
+                    <th>${game.winner}</th>
+                    <th><button class="btn btn-outline-info" onclick="resumeGame(${game.id})" id=${game.id}>Resume</button></th>
+                </tr>
                 `;
             });
+            output += `</table>`
             document.getElementById('games').innerHTML = output;
         })
 }

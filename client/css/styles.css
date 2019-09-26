@@ -1,4 +1,4 @@
-th,
+#tic th,
 td {
     table-layout: fixed;
     width: 600px;
@@ -6,7 +6,7 @@ td {
     border: 1px solid grey;
 }
 
-th {
+#tic th {
     text-align: center;
 }
 
