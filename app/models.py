@@ -1,14 +1,14 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
-#from flask_cors import CORS
+from flask_cors import CORS
 import os
 import sys
 
 
 #Init app
 app = Flask(__name__)
-#cors = CORS(app) # This will enable CORS for all routes
+cors = CORS(app) # This will enable CORS for all routes
 
 
 basedir = os.path.abspath(os.path.dirname(__file__))
