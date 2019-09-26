@@ -5,17 +5,6 @@ from flask_marshmallow import Marshmallow
 from app.models import *
 
 
-#Init app
-app = Flask(__name__)
-#cors = CORS(app) # This will enable CORS for all routes
-
-
-"""
-@app.route('/')
-def get():
-    return jsonify({"message":os.path.join(basedir, 'db.sqlite')})
-"""
-
 ###### CREATE/UPDATE/SHOW/DELETE GAMES
 
 #Create a game
@@ -82,10 +71,9 @@ def delete_game(id):
     db.session.delete(game_delete)
     db.session.commit()
 
-    
-    #result = games_schema.dump(all_games)
+
     return game_schema.jsonify(game_delete)
-    #return details_schema.jsonify(result)
+
 
 
 ####GET STATUS
@@ -107,25 +95,11 @@ def get_game_status(id):
             elif(result_list[i] == '2'):
                 board[i] = result_list[i]
 
-    
 
     board_string = ''.join(board)
-    #print(board_string, file=sys.stderr)
 
     print(game_detail.status, file=sys.stderr)
     return jsonify({"id":game_detail.id,"name":game_detail.name, "status":game_detail.status,"winner":game_detail.winner,"lastMove":board_string})
-
-
-
-
-
-
-
-
-
-
-
-####
 
 
 
@@ -151,7 +125,6 @@ def add_move(id):
 
     #Check if the move is valid
     """
-
     #Check if there are moves in the game
     move_exists = Detail.query.filter(Detail.id_game == id).first()
     #print(move_exists, file=sys.stderr)
@@ -183,14 +156,6 @@ def add_move(id):
             elif(result_list[i] == '2'):
                 board[i] = result_list[i]
                 board_2[i] = '1'
-            #elif(board[i]==''):
-            #    board[i]='0'
-            #    board_1[i] = '0'
-            #    board_2[i] = '0'
-
-        #print(list(result['moves']), file=sys.stderr)
-
-
 
 
     #TODO_Check if position is not occupied
@@ -278,7 +243,7 @@ def add_move(id):
         end_game("computer_won",id_game)
         return jsonify({"Message":"Computer WON", "lastMove":new_move_temp})
 
-    #Return next move
+#Return next move
     
     print(board)
     print(board_1)
